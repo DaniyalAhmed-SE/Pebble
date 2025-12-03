@@ -1,13 +1,13 @@
 {
   "project": {
     "name": "Pebble",
-    "version": "1.0",
-    "author": "Your Name",
+    "version": "1.1",
+    "author": "Muhammad Daniyal Ahmed",
     "license": "MIT",
-    "description": "A frosted-glass themed chat interface with offline AI integration."
+    "description": "A frosted-glass themed chat interface with image upload AI integration."
   },
   "aiModel": {
-    "modelName": "Pebble Pen Classifier",
+    "modelName": "Pebble Image Classifier",
     "type": "Image Classification",
     "classes": ["Pen", "Phone"],
     "framework": "TensorFlow.js",

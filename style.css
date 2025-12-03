@@ -2,7 +2,7 @@
 
 /* Prevent page scroll; we’ll scroll only inside chat-area */
 body {
-  background-color: #677d6a;
+  background-color: #519290;
   height: 100vh;
   overflow: hidden;                 /* key: no body scroll */
   display: flex;
@@ -115,8 +115,35 @@ body {
   padding: 10px;
   margin-top: 10px;
   border-radius: 12px;
- 
- 
   color: #F8EFDA;
   font-size: 12px;
+}
+
+/* Upload container styling */
+.upload-container {
+  margin: 10px 0;
+  text-align: center;
+}
+
+#imageUpload {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #333;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#imageUpload:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Images inside chat bubbles */
+.user-msg img,
+.ai-msg img {
+  max-width: 200px;
+  border-radius: 8px;
+  margin-top: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }

@@ -10,7 +10,7 @@
   <div class="container">
     <!-- Title -->
     <div class="title">Pebble</div>
-    <div class="version">Test Version</div>
+    <div class="version">Version 1.1</div>
 
     <!-- Chat area -->
     <div class="chat-area" id="chatArea"></div>
@@ -23,6 +23,11 @@
       </button>
     </div>
 
+    <!-- Image upload -->
+    <div class="upload-container">
+      <input type="file" id="imageUpload" accept="image/*">
+    </div>
+
     <!-- Footer -->
     <div class="footer">
       © 2025 Pebble. All rights reserved.
@@ -30,15 +35,12 @@
     </div>
   </div>
 
-  <!-- Hidden demo image for classification -->
-  <img id="input-image" src="sample-pen.jpg" alt="Input" style="display:none;">
+  <!-- Hidden image element used for classification -->
+  <img id="input-image" style="display:none;" alt="Preview" />
 
-  <!-- Load libraries in correct order -->
-  <!-- 1. TensorFlow.js core -->
+  <!-- Load libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-  <!-- 2. Teachable Machine image library -->
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image/dist/teachablemachine-image.min.js"></script>
-  <!-- 3. Your app logic -->
   <script src="script.js"></script>
 </body>
 </html>
