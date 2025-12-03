@@ -1,0 +1,25 @@
+{
+  "project": {
+    "name": "Pebble",
+    "version": "1.0",
+    "author": "Your Name",
+    "license": "MIT",
+    "description": "A frosted-glass themed chat interface with offline AI integration."
+  },
+  "aiModel": {
+    "modelName": "Pebble Pen Classifier",
+    "type": "Image Classification",
+    "classes": ["Pen", "Phone"],
+    "framework": "TensorFlow.js",
+    "offline": true,
+    "paths": {
+      "model": "model/model.json",
+      "metadata": "model/metadata.json"
+    }
+  },
+  "ui": {
+    "theme": "Frosted Glass",
+    "footerVisible": true,
+    "colorScheme": "Version-based"
+  }
+}

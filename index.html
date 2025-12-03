@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pebble</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Title -->
+    <div class="title">Pebble</div>
+    <div class="version">Test Version</div>
+
+    <!-- Chat area -->
+    <div class="chat-area" id="chatArea"></div>
+
+    <!-- Input area -->
+    <div class="input-container">
+      <input id="userInput" class="text-box" type="text" placeholder="Type your message..." />
+      <button id="sendBtn" class="send-button">
+        <span class="arrow">➤</span>
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      © 2025 Pebble. All rights reserved.
+      <span id="footer-info" style="margin-left: 8px;"></span>
+    </div>
+  </div>
+
+  <!-- Hidden demo image for classification -->
+  <img id="input-image" src="sample-pen.jpg" alt="Input" style="display:none;">
+
+  <!-- Load libraries in correct order -->
+  <!-- 1. TensorFlow.js core -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <!-- 2. Teachable Machine image library -->
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image/dist/teachablemachine-image.min.js"></script>
+  <!-- 3. Your app logic -->
+  <script src="script.js"></script>
+</body>
+</html>
