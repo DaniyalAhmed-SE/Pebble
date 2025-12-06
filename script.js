@@ -1,17 +1,18 @@
+// ===== State =====
 let PebbleConfig = null;
 let TMModel = null;
 let uploadedImage = null;
 let currentObjectURL = null;
 
-// DOM references
-const chatArea = document.getElementById("chatArea");
-const sendBtn = document.getElementById("sendBtn");
-const userInput = document.getElementById("userInput");
-const footerInfo = document.getElementById("footer-info");
+// ===== DOM =====
+const chatArea    = document.getElementById("chatArea");
+const sendBtn     = document.getElementById("sendBtn");
+const userInput   = document.getElementById("userInput");
+const footerInfo  = document.getElementById("footer-info");
 const imageUpload = document.getElementById("imageUpload");
-const inputImage = document.getElementById("input-image");
+const inputImage  = document.getElementById("input-image");
 
-// Add text message to chat
+// ===== Utilities =====
 function addMessage(role, text) {
   const msg = document.createElement("div");
   msg.className = role === "user" ? "user-msg" : "ai-msg";
@@ -20,48 +21,45 @@ function addMessage(role, text) {
   chatArea.scrollTop = chatArea.scrollHeight;
 }
 
-// Add image message to chat
 function addImageMessage(role, src, altText = "uploaded image") {
   const msg = document.createElement("div");
   msg.className = role === "user" ? "user-msg" : "ai-msg";
-
   const img = document.createElement("img");
   img.src = src;
   img.alt = altText;
-
   msg.appendChild(img);
   chatArea.appendChild(msg);
   chatArea.scrollTop = chatArea.scrollHeight;
 }
 
-// Load config
+// ===== Config & Model =====
 async function loadConfig() {
   try {
     const res = await fetch("pebble.json");
     PebbleConfig = await res.json();
-    if (footerInfo && PebbleConfig?.project) {
-      const { name, version, license } = PebbleConfig.project;
+    const { name, version, license } = PebbleConfig.project || {};
+    if (name && version && license) {
       footerInfo.textContent = `${name} v${version} — ${license} License`;
+      const v = document.getElementById("versionText");
+      if (v) v.textContent = `Version ${version}`;
     }
-  } catch (e) {
-    console.error("Failed to load pebble.json", e);
-    if (footerInfo) footerInfo.textContent = "Config load failed";
+  } catch {
+    footerInfo.textContent = "Config load failed";
   }
 }
 
-// Load Teachable Machine model
 async function loadModel() {
   try {
-    const { paths, modelName } = PebbleConfig?.aiModel || {};
+    const paths = PebbleConfig?.aiModel?.paths;
+    if (!paths) throw new Error("No model paths");
+    if (typeof tmImage === "undefined") throw new Error("tmImage not available");
     TMModel = await tmImage.load(paths.model, paths.metadata);
-    console.log("Model loaded:", modelName);
   } catch (e) {
-    console.error("Failed to load model", e);
     addMessage("ai", "Model failed to load.");
   }
 }
 
-// Predict top class
+// ===== Inference =====
 async function getTopPrediction(inputEl) {
   if (!TMModel) return { className: "Model not ready", probability: 0 };
   const preds = await TMModel.predict(inputEl);
@@ -69,35 +67,55 @@ async function getTopPrediction(inputEl) {
   return preds[0];
 }
 
-// Handle AI reply
 async function handleAIReply() {
   if (TMModel && uploadedImage) {
     const top = await getTopPrediction(uploadedImage);
     const pct = (top.probability * 100).toFixed(1);
     addMessage("ai", `I think this is ${top.className} (${pct}%)`);
-  } else if (!TMModel) {
-    addMessage("ai", "Model not ready. Please wait or reload.");
-  } else {
+  } else if (!uploadedImage) {
     addMessage("ai", "Please upload an image first.");
+  } else {
+    addMessage("ai", "Model not ready. Try reloading.");
   }
 }
 
-// Wire send button
+// ===== Input behavior =====
+function clearOnLoad() {
+  userInput.value = "";
+  userInput.style.height = "auto";
+}
+
+function wireAutoExpand() {
+  const max = Math.max(window.innerHeight * 0.5, 200); // cap at ~50vh
+  const expand = () => {
+    userInput.style.height = "auto";
+    const target = Math.min(userInput.scrollHeight, max);
+    userInput.style.height = target + "px";
+  };
+  userInput.addEventListener("input", expand);
+  expand(); // initialize
+}
+
 function wireSend() {
   sendBtn.addEventListener("click", async () => {
     const text = userInput.value.trim();
     if (!text) return;
     addMessage("user", text);
     userInput.value = "";
-    await handleAIReply();
+    userInput.style.height = "auto";
+    if (uploadedImage) await handleAIReply();
   });
 
+  // Enter sends; Shift+Enter newline
   userInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") sendBtn.click();
+    if (e.key === "Enter") {
+      if (e.shiftKey) return;      // allow newline
+      e.preventDefault();          // block newline
+      sendBtn.click();             // send
+    }
   });
 }
 
-// Wire image upload
 function wireUpload() {
   imageUpload.addEventListener("change", () => {
     const file = imageUpload.files?.[0];
@@ -115,8 +133,7 @@ function wireUpload() {
       uploadedImage = inputImage;
       addImageMessage("user", objectURL, file.name);
       addMessage("ai", "Image uploaded. Ready to classify!");
-      // Optional: auto classify immediately
-      // handleAIReply();
+      // Optionally: handleAIReply();
     };
 
     inputImage.src = objectURL;
@@ -124,10 +141,12 @@ function wireUpload() {
   });
 }
 
-// Init
+// ===== Init =====
 window.addEventListener("DOMContentLoaded", async () => {
-  await loadConfig();
-  await loadModel();
+  clearOnLoad();
+  wireAutoExpand();
   wireSend();
   wireUpload();
+  await loadConfig();
+  await loadModel();
 });

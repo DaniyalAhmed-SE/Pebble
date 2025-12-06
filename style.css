@@ -1,10 +1,8 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Prevent page scroll; we’ll scroll only inside chat-area */
 body {
-  background-color: #519290;
+  background-color: #706c61;
   height: 100vh;
-  overflow: hidden;                 /* key: no body scroll */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,86 +10,109 @@ body {
 }
 
 .container {
+  position: relative;
+  width: 100%;
+  max-width: 1500px;
+  height: 100vh;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 900px;
-  height: 100vh;                    /* key: fill viewport */
-  padding: 20px;
 }
 
-/* Header */
-.title {
-  color: #F8EFDA;
-  font-size: 44px;
+/* Header centered */
+.header {
   text-align: center;
+  margin-bottom: 10px;
+}
+
+.title {
+  color: #FAFAFA;
+  font-size: 44px;
   font-family: 'Impact', Times, serif;
 }
 
 .version {
-  color: #F8EFDA;
+  color: #FAFAFA;
   font-size: 16px;
   font-weight: bold;
-  text-align: center;
   font-family: 'Times New Roman', Times, serif;
 }
 
-/* Chat scrolls, not the page */
+/* Chat area: vertical scroll only, no horizontal scroll */
 .chat-area {
-  flex: 1;                          /* key: takes remaining space */
-  overflow-y: auto;                 /* key: only area that scrolls */
-  margin: 20px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;            /* prevent horizontal scroll */
+  margin-bottom: 100px;          /* space for input box */
   padding: 20px;
-  width: 100%;
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* Messages */
+/* Base text wrapping rules shared across bubbles */
+.user-msg,
+.ai-msg {
+  max-width: 70%;
+  width: fit-content;            /* bubble sizes to content up to max-width */
+  word-wrap: break-word;         /* legacy wrap */
+  overflow-wrap: anywhere;       /* break long words/URLs anywhere if needed */
+  white-space: pre-wrap;         /* preserve newlines from textarea; wrap long lines */
+  line-height: 1.4;
+}
+
+/* Messages styling */
 .user-msg {
-  background-color: #F8EFDA;
+  background-color: #FAFAFA;
   color: #000;
   padding: 10px 15px;
   border-radius: 12px 12px 0 12px;
-  max-width: 70%;
-  word-wrap: break-word;
-  margin-left: auto;
+  margin-left: auto;             /* right side */
 }
 
 .ai-msg {
-  background-color: #536878;
-  color: #F8EFDA;
+  background-color: #3f4f5c;
+  color: #FAFAFA;
   padding: 10px 15px;
   border-radius: 12px 12px 12px 0;
-  max-width: 70%;
-  word-wrap: break-word;
-  margin-right: auto;
+  margin-right: auto;            /* left side */
 }
 
-/* Input area stays above footer */
+/* Input area pinned at bottom */
 .input-container {
+  position: absolute;
+  bottom: 40px;              /* adjust vertical position */
+  left: 50%;                 /* anchor in the middle */
+  transform: translateX(-50%); /* shift back half its width */
   display: flex;
+  align-items: flex-end;
   gap: 10px;
-  width: 100%;
+  width: auto;               /* shrink to fit content */
+  z-index: 2;
 }
 
+/* Textarea expands upward (JS sets height) */
 .text-box {
-  flex: 1;
+ width: 600px;              /* fixed width you control */
   padding: 12px 15px;
-  background-color: #F8EFDA;
+  background-color: #f4fffe9f;
   border: none;
   border-radius: 12px;
   font-size: 16px;
-  color: #333;
+  resize: none;
+  overflow-y: hidden;
+  min-height: 40px;
+  max-height: 50vh;
   outline: none;
 }
 
-.send-button {
-  background-color: #536878;
+/* Buttons */
+.send-button,
+.upload-btn {
+  background-color: #3f4f5c;
   border: none;
   border-radius: 12px;
   padding: 12px 18px;
@@ -99,47 +120,33 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #FAFAFA;
+  font-size: 20px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+.send-button:hover,
+.upload-btn:hover { background-color: #3f3921; }
+
+.upload-btn {
+  font-size: 26px;   /* bigger than the send button */
+  line-height: 1;    /* keeps it centered vertically */
 }
 
-.send-button:hover { background-color: #3f4f5c; }
 .arrow { color: white; font-size: 20px; font-weight: bold; }
 
-/* Scrollbar styling */
-.chat-area::-webkit-scrollbar { width: 8px; }
-.chat-area::-webkit-scrollbar-thumb { background-color: #536878; border-radius: 4px; }
-.chat-area::-webkit-scrollbar-track { background: transparent; }
-
-/* Footer inside container */
+/* Footer pinned */
 .footer {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 12px;
-  color: #F8EFDA;
+  color: #FAFAFA;
   font-size: 12px;
 }
 
-/* Upload container styling */
-.upload-container {
-  margin: 10px 0;
-  text-align: center;
-}
-
-#imageUpload {
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.2);
-  color: #333;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-#imageUpload:hover {
-  background: rgba(255, 255, 255, 0.4);
-}
-
-/* Images inside chat bubbles */
+/* Optional: image sizing in bubbles */
 .user-msg img,
 .ai-msg img {
   max-width: 200px;

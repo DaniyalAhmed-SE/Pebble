@@ -8,23 +8,21 @@
 </head>
 <body>
   <div class="container">
-    <!-- Title -->
-    <div class="title">Pebble</div>
-    <div class="version">Version 1.1(Updated: 03 December 2025)</div>
+    <!-- Header -->
+    <div class="header">
+      <div class="title">Pebble</div>
+      <div class="version" id="versionText">Version 1.2</div>
+    </div>
+
     <!-- Chat area -->
     <div class="chat-area" id="chatArea"></div>
 
     <!-- Input area -->
     <div class="input-container">
-      <input id="userInput" class="text-box" type="text" placeholder="Type your message..." />
-      <button id="sendBtn" class="send-button">
-        <span class="arrow">➤</span>
-      </button>
-    </div>
-
-    <!-- Image upload -->
-    <div class="upload-container">
-      <input type="file" id="imageUpload" accept="image/*">
+      <textarea id="userInput" class="text-box" placeholder="Type your message..." autocomplete="off"></textarea>
+      <label for="imageUpload" class="upload-btn">+</label>
+      <input type="file" id="imageUpload" accept="image/*" hidden>
+      <button id="sendBtn" class="send-button"><span class="arrow">➤</span></button>
     </div>
 
     <!-- Footer -->
@@ -34,10 +32,8 @@
     </div>
   </div>
 
-  <!-- Hidden image element used for classification -->
   <img id="input-image" style="display:none;" alt="Preview" />
 
-  <!-- Load libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image/dist/teachablemachine-image.min.js"></script>
   <script src="script.js"></script>
